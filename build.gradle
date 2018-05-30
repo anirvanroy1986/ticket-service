@@ -14,6 +14,38 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'application'
+
+mainClassName = 'com.anirvan.reservation.ticket.TicketServiceApplication'
+
+task createJar(type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': 'Ticket-Service Jar',  
+        	'Implementation-Version': '1.0.1',
+        	'Main-Class': 'com.anirvan.reservation.ticket.TicketServiceApplication'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+    }
+    test {
+        java {
+            srcDir 'src/test/java'
+        }
+    }
+}
+
+bootJar {
+    baseName = 'ticket-service'
+    version =  '0.1.0'
+}
 
 group = 'com.anirvan.reservation.ticket'
 version = '0.0.1-SNAPSHOT'
@@ -27,4 +59,21 @@ repositories {
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+test {
+    // Print in console the result of test
+    afterTest { test, result ->
+        println "Executing test ${test.name} [${test.className}] with result: ${result.resultType}"
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': 'com.anirvan.reservation.ticket.TicketServiceApplication'
+        )
+    }
 }

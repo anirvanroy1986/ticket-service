@@ -5,20 +5,19 @@ package com.anirvan.reservation.ticket.model;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 /**
  * @author anirvanroy
  *
  */
+@Service
 public class Venue {
 	
 	private int totalSeats;
 	private String name;
 	private String venueId;
 	private TheaterShow show;
-	
-	public Venue(int seats) {
-		this.totalSeats = seats;
-	}
 	
 	/**
 	 * @return the totalSeats

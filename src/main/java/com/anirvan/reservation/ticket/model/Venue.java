@@ -15,6 +15,11 @@ public class Venue {
 	private String name;
 	private String venueId;
 	private TheaterShow show;
+	
+	public Venue(int seats) {
+		this.totalSeats = seats;
+	}
+	
 	/**
 	 * @return the totalSeats
 	 */

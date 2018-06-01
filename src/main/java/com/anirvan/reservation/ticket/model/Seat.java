@@ -10,6 +10,8 @@ package com.anirvan.reservation.ticket.model;
 public class Seat {
 	
 	private String seatNum;
+	private String timeStamp;
+	private Hold hold;
 	
 	/**
 	 * @return the seatNum
@@ -25,9 +27,37 @@ public class Seat {
 		this.seatNum = seatNum;
 	}
 
+	/**
+	 * @return the timeStamp
+	 */
+	public String getTimeStamp() {
+		return timeStamp;
+	}
+
+	/**
+	 * @param timeStamp the timeStamp to set
+	 */
+	public void setTimeStamp(String timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+
 	@Override
 	public String toString() {
 		return seatNum;
+	}
+
+	/**
+	 * @return the hold
+	 */
+	public Hold getHold() {
+		return hold;
+	}
+
+	/**
+	 * @param hold the hold to set
+	 */
+	public void setHold(Hold hold) {
+		this.hold = hold;
 	}
 	
 

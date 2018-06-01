@@ -7,11 +7,12 @@ package com.anirvan.reservation.ticket.model;
  * @author anirvanroy
  *
  */
-public class Seat {
+public class Seat implements Comparable<Seat>{
 	
 	private String seatNum;
 	private String timeStamp;
 	private Hold hold;
+	private int id;
 	
 	/**
 	 * @return the seatNum
@@ -58,6 +59,28 @@ public class Seat {
 	 */
 	public void setHold(Hold hold) {
 		this.hold = hold;
+	}
+	
+	
+   /**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Override
+	public int compareTo(Seat o) {
+	   int compareSeatNo=(o).getId();
+	   /* For Descending order*/
+	   return compareSeatNo - this.id;
 	}
 	
 

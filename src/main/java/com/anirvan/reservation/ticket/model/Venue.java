@@ -5,6 +5,7 @@ package com.anirvan.reservation.ticket.model;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,7 +18,7 @@ public class Venue {
 	private int totalSeats;
 	private String name;
 	private String venueId;
-	private TheaterShow show;
+	private TheaterShow show = new TheaterShow();
 	
 	/**
 	 * @return the totalSeats

@@ -3,17 +3,41 @@
  */
 package com.anirvan.reservation.ticket.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 /**
  * @author anirvanroy
  *
  */
+@Service
 public class TheaterShow {
 	
 	private String showName;
 	private String showTime;
-	private Map<Seat, String> seatMap;
+	private Map<String, List<Seat>> seatMap;
+	private Map<String, List<Seat>> temporarHeldSeatMap;
+	
+
+	public TheaterShow() {}
+	
+	public TheaterShow(int rows) {
+		seatMap = new LinkedHashMap<>();
+		temporarHeldSeatMap = new LinkedHashMap<>();
+		for(int i=0; i< rows; i++) {
+			String key = "R" + (i+1);
+			seatMap.put(key, new ArrayList<Seat>());
+			temporarHeldSeatMap.put(key, new ArrayList<Seat>());
+		}
+		
+	}
+	
 	/**
 	 * @return the showName
 	 */
@@ -41,14 +65,27 @@ public class TheaterShow {
 	/**
 	 * @return the seatMap
 	 */
-	public Map<Seat, String> getSeatMap() {
+	public Map<String, List<Seat>> getSeatMap() {
 		return seatMap;
 	}
 	/**
 	 * @param seatMap the seatMap to set
 	 */
-	public void setSeatMap(Map<Seat, String> seatMap) {
+	public void setSeatMap(Map<String, List<Seat>> seatMap) {
 		this.seatMap = seatMap;
 	}
+	/**
+	 * @return the temporarHeldSeatMap
+	 */
+	public Map<String, List<Seat>> getTemporarHeldSeatMap() {
+		return temporarHeldSeatMap;
+	}
+	/**
+	 * @param temporarHeldSeatMap the temporarHeldSeatMap to set
+	 */
+	public void setTemporarHeldSeatMap(Map<String, List<Seat>> temporarHeldSeatMap) {
+		this.temporarHeldSeatMap = temporarHeldSeatMap;
+	}
+	
 
 }

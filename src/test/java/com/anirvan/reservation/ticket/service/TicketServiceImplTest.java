@@ -4,6 +4,7 @@
 package com.anirvan.reservation.ticket.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -78,6 +79,14 @@ public class TicketServiceImplTest {
 		Mockito.doReturn(mockSeatHold()).when(processor).holdSeats(10, "R1");
 		SeatHold seatHold = ticketService.findAndHoldSeats(10, "");
 		assertEquals(1005, seatHold.getSeatHoldId());
+    }
+	
+	@Test
+    public void testFindAndHoldSeatsMaxCount() {
+		
+		when(venue.getShow()).thenReturn(new TheaterShow());
+		SeatHold seatHold = ticketService.findAndHoldSeats(400, "");
+		assertNull(seatHold);
     }
 	
 	private Map<String,List<Seat>> mockMaps(int rows) {

@@ -73,6 +73,8 @@ public class TicketProcessor {
 		}else {
 			int lastAssignedSeat = findLastAssignedSeatNumber(seatListForRow, venue.getShow().getSeatMap().get(row));
 			createSeats(number, seatListForRow, lastAssignedSeat+1, temporaryHeldSeats, row);
+			//seatListForRow.addAll(temporaryHeldSeats);
+			venue.getShow().getTemporarHeldSeatMap().put(row, seatListForRow);
 		}
 		
 		SeatHold seatHold = new SeatHold();
@@ -80,6 +82,8 @@ public class TicketProcessor {
 		seatHold.setSeatHoldId(ConfirmationGenerator.getTemporaryConfirmationCode());
 		seatHold.setTimeStamp(System.currentTimeMillis());
 		seatHoldMapper.put(new Integer(seatHold.getSeatHoldId()), seatHold);
+		int revisedCount = temporaryHeldSeats.size() + venue.getShow().getTotalHeldSeats();
+		venue.getShow().setTotalHeldSeats(revisedCount);
 		return seatHold;
 	}
 	
@@ -94,7 +98,7 @@ public class TicketProcessor {
 			Seat seat = new Seat();
 			seat.setSeatNum(row+"-"+String.valueOf(seatAssignNum+i));
 			seat.setId(seatAssignNum+i);
-			seat.setTimeStamp(String.valueOf(System.currentTimeMillis()));
+			seat.setTimeStamp(System.currentTimeMillis());
 			seatList.add(seat);
 			temporaryHeldSeatList.add(seat);
 		}

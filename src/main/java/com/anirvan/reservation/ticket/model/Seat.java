@@ -3,6 +3,8 @@
  */
 package com.anirvan.reservation.ticket.model;
 
+import java.util.Objects;
+
 /**
  * @author anirvanroy
  *
@@ -10,7 +12,7 @@ package com.anirvan.reservation.ticket.model;
 public class Seat implements Comparable<Seat>{
 	
 	private String seatNum;
-	private String timeStamp;
+	private long timeStamp;
 	private Hold hold;
 	private int id;
 	
@@ -31,14 +33,14 @@ public class Seat implements Comparable<Seat>{
 	/**
 	 * @return the timeStamp
 	 */
-	public String getTimeStamp() {
+	public long getTimeStamp() {
 		return timeStamp;
 	}
 
 	/**
 	 * @param timeStamp the timeStamp to set
 	 */
-	public void setTimeStamp(String timeStamp) {
+	public void setTimeStamp(long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 
@@ -75,6 +77,23 @@ public class Seat implements Comparable<Seat>{
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	@Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof SeatHold)) {
+            return false;
+        }
+        Seat seats = (Seat) o;
+        return 
+                Objects.equals(seatNum, seats.getSeatNum());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(seatNum);
+    }
 
 	@Override
 	public int compareTo(Seat o) {

@@ -32,5 +32,6 @@ public class TicketServiceApplication implements CommandLineRunner{
 		for(int i=0; i < seatHold2.getSeats().size(); i++) {
 			System.out.println(seatHold2.getSeats().get(i).getSeatNum());;
 		}
+		System.out.println("Num of Seats available: "+ticketService.numSeatsAvailable());;
 	}
 }

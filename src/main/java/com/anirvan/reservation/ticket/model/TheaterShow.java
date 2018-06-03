@@ -4,12 +4,10 @@
 package com.anirvan.reservation.ticket.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,8 +19,10 @@ public class TheaterShow {
 	
 	private String showName;
 	private String showTime;
-	private Map<String, List<Seat>> seatMap;
-	private Map<String, List<Seat>> temporarHeldSeatMap;
+	private Map<String, List<Seat>> seatMap = new LinkedHashMap<>();
+	private Map<String, List<Seat>> temporarHeldSeatMap = new LinkedHashMap<>();
+	private int totalReservedSeats;
+	private int totalHeldSeats;
 	
 
 	public TheaterShow() {}
@@ -35,7 +35,8 @@ public class TheaterShow {
 			seatMap.put(key, new ArrayList<Seat>());
 			temporarHeldSeatMap.put(key, new ArrayList<Seat>());
 		}
-		
+		setTotalReservedSeats(0);
+		setTotalHeldSeats(0);
 	}
 	
 	/**
@@ -85,6 +86,34 @@ public class TheaterShow {
 	 */
 	public void setTemporarHeldSeatMap(Map<String, List<Seat>> temporarHeldSeatMap) {
 		this.temporarHeldSeatMap = temporarHeldSeatMap;
+	}
+
+	/**
+	 * @return the totalReservedSeats
+	 */
+	public int getTotalReservedSeats() {
+		return totalReservedSeats;
+	}
+
+	/**
+	 * @param totalReservedSeats the totalReservedSeats to set
+	 */
+	public void setTotalReservedSeats(int totalReservedSeats) {
+		this.totalReservedSeats = totalReservedSeats;
+	}
+
+	/**
+	 * @return the totalHeldSeats
+	 */
+	public int getTotalHeldSeats() {
+		return totalHeldSeats;
+	}
+
+	/**
+	 * @param totalHeldSeats the totalHeldSeats to set
+	 */
+	public void setTotalHeldSeats(int totalHeldSeats) {
+		this.totalHeldSeats = totalHeldSeats;
 	}
 	
 

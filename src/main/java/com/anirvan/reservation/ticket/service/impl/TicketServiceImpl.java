@@ -78,8 +78,7 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public String reserveSeats(int seatHoldId, String customerEmail) {
-		// TODO Auto-generated method stub
-		return null;
+		return processor.bookSeats(seatHoldId);
 	}
 
 	/**

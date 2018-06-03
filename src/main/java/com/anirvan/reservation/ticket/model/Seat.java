@@ -15,6 +15,7 @@ public class Seat implements Comparable<Seat>{
 	private long timeStamp;
 	private Hold hold;
 	private int id;
+	private String row;
 	
 	/**
 	 * @return the seatNum
@@ -100,6 +101,20 @@ public class Seat implements Comparable<Seat>{
 	   int compareSeatNo=(o).getId();
 	   /* For Descending order*/
 	   return compareSeatNo - this.id;
+	}
+
+	/**
+	 * @return the row
+	 */
+	public String getRow() {
+		return row;
+	}
+
+	/**
+	 * @param row the row to set
+	 */
+	public void setRow(String row) {
+		this.row = row;
 	}
 	
 

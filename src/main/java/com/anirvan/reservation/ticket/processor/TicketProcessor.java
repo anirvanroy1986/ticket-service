@@ -58,7 +58,7 @@ public class TicketProcessor {
 		return venue.getShow().getTemporarHeldSeatMap();
 	}
 	
-	public SeatHold holdSeats(int number, String row) {
+	public synchronized SeatHold holdSeats(int number, String row) {
 		if(venue.getShow().getTemporarHeldSeatMap() == null) {
 			venue.getShow().setTemporarHeldSeatMap(new HashMap<String, List<Seat>>());
 		}
@@ -85,6 +85,17 @@ public class TicketProcessor {
 		int revisedCount = temporaryHeldSeats.size() + venue.getShow().getTotalHeldSeats();
 		venue.getShow().setTotalHeldSeats(revisedCount);
 		return seatHold;
+	}
+	
+	public synchronized String bookSeats(int seatConfId) {
+		SeatHold seatHold = seatHoldMapper.get(seatConfId);
+		List<Seat> heldSeats = seatHold.getSeats();
+		for(Seat seat: heldSeats) {
+			String row = seat.getRow();
+			venue.getShow().getSeatMap().get(row).add(seat);
+			venue.getShow().getTemporarHeldSeatMap().get(row).remove(seat);
+		}
+		return ConfirmationGenerator.getConfirmationCode();
 	}
 	
 	private int findLastAssignedSeatNumber(List<Seat> temporaryHeldSeats, List<Seat> reservedSeats) {

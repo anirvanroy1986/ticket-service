@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +21,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
-
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.anirvan.reservation.ticket.model.Seat;
@@ -47,6 +46,9 @@ public class TicketServiceImplTest {
     Venue venue; 
 	
 	@Mock
+    TheaterShow show;
+	
+	@Mock
 	TicketProcessor processor;
 
     @Rule public MockitoRule mockitoRule = MockitoJUnit.rule(); 
@@ -58,19 +60,20 @@ public class TicketServiceImplTest {
 		ReflectionTestUtils.setField(ticketService, "rows", String.valueOf(15));
 		ReflectionTestUtils.setField(ticketService, "columns", String.valueOf(25));
 		ReflectionTestUtils.setField(ticketService, "processor", new TicketProcessor());
+		ReflectionTestUtils.setField(ticketService, "holdTimer", String.valueOf(120));
 		ReflectionTestUtils.setField(venue, "show", new TheaterShow(15));
 		ReflectionTestUtils.setField(processor, "venue", new Venue());
 		MockitoAnnotations.initMocks(this);
 		
 	}
 	
-	@Test
+	//@Test
     public void testNumSeatsAvailableEmptyTheater() {
         int ans = ticketService.numSeatsAvailable();
         assertEquals(25 * 15, ans);
     }
 	
-	@Test
+	//@Test
     public void testFindAndHoldSeats() {
 		
 		when(venue.getShow()).thenReturn(new TheaterShow());
@@ -81,12 +84,32 @@ public class TicketServiceImplTest {
 		assertEquals(1005, seatHold.getSeatHoldId());
     }
 	
-	@Test
+	//@Test
     public void testFindAndHoldSeatsMaxCount() {
 		
 		when(venue.getShow()).thenReturn(new TheaterShow());
 		SeatHold seatHold = ticketService.findAndHoldSeats(400, "");
 		assertNull(seatHold);
+    }
+	
+	@Test
+    public void testHoldRemoval() throws InterruptedException {
+		
+		when(venue.getShow()).thenReturn(new TheaterShow());
+		Map<Integer, SeatHold> testSeatHoldMapper = new HashMap<>();
+		SeatHold seatHold1 = new SeatHold();
+		long timeStamp = System.currentTimeMillis();
+		seatHold1.setTimeStamp(timeStamp);
+		Thread.sleep(121000);
+		testSeatHoldMapper.put(new Integer(10001), seatHold1);
+		Mockito.doReturn(testSeatHoldMapper).when(processor).getSeatHoldMapper();
+		Mockito.doReturn(mockMaps(15)).when(processor).getAvailableSeats();
+		Mockito.doReturn(mockMaps(15)).when(processor).getTemporaryHeldSeats();
+		
+		
+		Mockito.doReturn(mockSeatHold()).when(processor).holdSeats(10, "R1");
+		SeatHold seatHold = ticketService.findAndHoldSeats(10, "");
+		assertEquals(1005, seatHold.getSeatHoldId());
     }
 	
 	private Map<String,List<Seat>> mockMaps(int rows) {

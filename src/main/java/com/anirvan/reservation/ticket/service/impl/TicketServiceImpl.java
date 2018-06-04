@@ -93,6 +93,7 @@ public class TicketServiceImpl implements TicketService {
 			long timeElapsed = currentTime - entry.getValue().getTimeStamp();
 
 			if ((timeElapsed) / 1000 > Integer.parseInt(holdTimer)) {
+				System.out.println("Hold test");
 				processor.getSeatHoldMapper().remove(entry.getKey());
 			}
 		}
@@ -108,6 +109,7 @@ public class TicketServiceImpl implements TicketService {
 				if (!((timeElapsed) / 1000 > Integer.parseInt(holdTimer))) {
 					tempList.add(seat);
 				}else{
+					System.out.println("Hold test 2");
 					count--;
 				}
 				

@@ -14,7 +14,6 @@ Design:
 Structure of Map:
 Map [Key-> Row number, Value-> List<Seat>]. Example: Key: R-1 Value: [R1-1, R1-2, R1-3]
 
-TicketService --> TicketProcessor
 
 
 **Build**

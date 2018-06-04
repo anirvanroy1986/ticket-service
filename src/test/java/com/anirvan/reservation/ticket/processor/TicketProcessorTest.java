@@ -93,5 +93,6 @@ public class TicketProcessorTest {
 		assertNotNull(seatHold);
 		assertEquals(25, seatHold.getSeats().size());
 	}
+	
 
 }

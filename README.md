@@ -8,6 +8,13 @@ Assumptions:
 3. If at anytime, number of Seats requested for hold is greater than number of available seats then request is not processed further
 4. No REST API is written to test the application.
 5. No database is used to persist the values. HashMaps in the Processor class is used for persisting and retrieving values
+6. A set timer is provided after which the ticket hold is removed. Timer is set to 120 seconds and is configured in application.properties
+
+Design:
+Structure of Map:
+Map [Key-> Row number, Value-> List<Seat>]. Example: Key: R-1 Value: [R1-1, R1-2, R1-3]
+
+TicketService --> TicketProcessor
 
 
 **Build**
@@ -24,8 +31,5 @@ To create JAR
 $gradle createJar
 
 Run the application
-<<<<<<< HEAD
 $ java -jar ticket-service-0.1.0.jar
-=======
-$ java -jar ticket-service-0.1.0.jar
->>>>>>> c8f7f49b3675b44e0153f767dc88080fb98bbacc
+

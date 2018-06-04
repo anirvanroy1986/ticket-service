@@ -145,7 +145,9 @@ public class TicketServiceImpl implements TicketService {
 			if (numOfAvailableSeatsForRow > seatsForBooking) {
 				// Hold Tickets
 				seatHold = processor.holdSeats(seatsForBooking, entry.getKey(), timeStamp);
-				tempList.addAll(seatHold.getSeats());
+				if(seatHold != null) {
+					tempList.addAll(seatHold.getSeats());
+				}
 				break;
 			}else if(numOfAvailableSeatsForRow == 0) {
 				continue;
@@ -155,7 +157,9 @@ public class TicketServiceImpl implements TicketService {
 					seatHold = processor.holdSeats(numOfAvailableSeatsForRow, entry.getKey(), timeStamp);
 				}else {
 					seatHold = processor.holdSeats(tempCounter, entry.getKey(), timeStamp);
-					tempList.addAll(seatHold.getSeats());
+					if(seatHold != null) {
+						tempList.addAll(seatHold.getSeats());
+					}
 					break;
 				}
 				if(!tempIdGenerator) {
@@ -170,7 +174,9 @@ public class TicketServiceImpl implements TicketService {
 				
 			}
 		}
-		seatHold.setSeats(tempList);
+		if(seatHold != null) {
+			seatHold.setSeats(tempList);
+		}
 		return seatHold;
 	}
 

@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,8 +29,7 @@ import com.anirvan.reservation.ticket.service.TicketService;
 @Service
 public class TicketServiceImpl implements TicketService {
 
-	// SeatHold object as the key mapped to the time when hold was placed
-	private Map<Integer, SeatHold> seatHoldMapper = new HashMap<>();
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private Venue venue;
 	@Autowired
@@ -50,7 +51,7 @@ public class TicketServiceImpl implements TicketService {
 		}
 		int reservedSeatCount = showTime.getTotalReservedSeats();
 		int tempReservedSeatCount = showTime.getTotalHeldSeats();
-		System.out.println("Total Seats in theater "+venue.getTotalSeats());
+		LOGGER.info("Total Seats in theater "+venue.getTotalSeats());
 		return ((Integer.parseInt(rows) * Integer.parseInt(columns)) - (reservedSeatCount + tempReservedSeatCount));
 	}
 
@@ -59,7 +60,7 @@ public class TicketServiceImpl implements TicketService {
 		removeTemporaryHold();
 		// Check if requested number of seats available
 		int totaSeatsAvailable = numSeatsAvailable();
-		System.out.println("Number of Seats " + totaSeatsAvailable);
+		LOGGER.info("Number of Seats " + totaSeatsAvailable);
 		if (totaSeatsAvailable < numSeats) {
 			System.out.println("Theater has only " + totaSeatsAvailable + "available ");
 			return null;
@@ -93,7 +94,7 @@ public class TicketServiceImpl implements TicketService {
 			long timeElapsed = currentTime - entry.getValue().getTimeStamp();
 
 			if ((timeElapsed) / 1000 > Integer.parseInt(holdTimer)) {
-				System.out.println("Hold test");
+				LOGGER.info("More than 120 seconds elapsed, removing hold on tickets");
 				processor.getSeatHoldMapper().remove(entry.getKey());
 			}
 		}
@@ -109,7 +110,7 @@ public class TicketServiceImpl implements TicketService {
 				if (!((timeElapsed) / 1000 > Integer.parseInt(holdTimer))) {
 					tempList.add(seat);
 				}else{
-					System.out.println("Hold test 2");
+					LOGGER.info("Hold test 2");
 					count--;
 				}
 				
@@ -123,25 +124,53 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	/**
-	 * 
+	 * Method to get a list of Available seats and Temporary Seats and select the best seats
+	 * from the top of the theater row and 
 	 */
 	private SeatHold findBestSeats(int seatsForBooking, SeatHold seatHold) {
 		Map<String, List<Seat>> reservedSeatMap = processor.getAvailableSeats();
 		Map<String, List<Seat>> temporarySeatMap = processor.getTemporaryHeldSeats();
 
 		// Iterate Map to find which row can have the number of seats be Held
+		int tempCounter = seatsForBooking;
+		int confId = 0;
+		boolean tempIdGenerator = false;
+		List<Seat> tempList = new ArrayList<>();
 		for (Map.Entry<String, List<Seat>> entry : reservedSeatMap.entrySet()) {
 			int numOfSeatsBooked = entry.getValue().size();
 			List<Seat> temporaryHeldSeatList = temporarySeatMap.get(entry.getKey());
 			int numOfAvailableSeatsForRow = Integer.parseInt(columns)
 					- (numOfSeatsBooked + temporaryHeldSeatList.size());
+			long timeStamp = System.currentTimeMillis();
 			if (numOfAvailableSeatsForRow > seatsForBooking) {
 				// Hold Tickets
-				seatHold = processor.holdSeats(seatsForBooking, entry.getKey());
+				seatHold = processor.holdSeats(seatsForBooking, entry.getKey(), timeStamp);
+				tempList.addAll(seatHold.getSeats());
 				break;
+			}else if(numOfAvailableSeatsForRow == 0) {
+				continue;
+			}
+			else {
+				if(tempCounter > numOfAvailableSeatsForRow) {
+					seatHold = processor.holdSeats(numOfAvailableSeatsForRow, entry.getKey(), timeStamp);
+				}else {
+					seatHold = processor.holdSeats(tempCounter, entry.getKey(), timeStamp);
+					tempList.addAll(seatHold.getSeats());
+					break;
+				}
+				if(!tempIdGenerator) {
+					confId = seatHold.getSeatHoldId();
+					tempIdGenerator = true;
+				}
+				tempCounter -= numOfAvailableSeatsForRow;
+				seatHold.setSeatHoldId(confId);
+				tempList.addAll(seatHold.getSeats());
+				continue;
+				//}
+				
 			}
 		}
-
+		seatHold.setSeats(tempList);
 		return seatHold;
 	}
 

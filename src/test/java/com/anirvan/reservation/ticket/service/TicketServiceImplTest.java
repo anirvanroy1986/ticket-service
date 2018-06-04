@@ -67,24 +67,24 @@ public class TicketServiceImplTest {
 		
 	}
 	
-	//@Test
+	@Test
     public void testNumSeatsAvailableEmptyTheater() {
         int ans = ticketService.numSeatsAvailable();
         assertEquals(25 * 15, ans);
     }
 	
-	//@Test
+	@Test
     public void testFindAndHoldSeats() {
-		
+		long timeStamp = System.currentTimeMillis();
 		when(venue.getShow()).thenReturn(new TheaterShow());
 		Mockito.doReturn(mockMaps(15)).when(processor).getAvailableSeats();
 		Mockito.doReturn(mockMaps(15)).when(processor).getTemporaryHeldSeats();
-		Mockito.doReturn(mockSeatHold()).when(processor).holdSeats(10, "R1");
+		Mockito.doReturn(mockSeatHold()).when(processor).holdSeats(10, "R1",timeStamp);
 		SeatHold seatHold = ticketService.findAndHoldSeats(10, "");
 		assertEquals(1005, seatHold.getSeatHoldId());
     }
 	
-	//@Test
+	@Test
     public void testFindAndHoldSeatsMaxCount() {
 		
 		when(venue.getShow()).thenReturn(new TheaterShow());
@@ -106,8 +106,8 @@ public class TicketServiceImplTest {
 		Mockito.doReturn(mockMaps(15)).when(processor).getAvailableSeats();
 		Mockito.doReturn(mockMaps(15)).when(processor).getTemporaryHeldSeats();
 		
-		
-		Mockito.doReturn(mockSeatHold()).when(processor).holdSeats(10, "R1");
+		//long timeStamp = System.currentTimeMillis();
+		Mockito.doReturn(mockSeatHold()).when(processor).holdSeats(10, "R1",timeStamp);
 		SeatHold seatHold = ticketService.findAndHoldSeats(10, "");
 		assertEquals(1005, seatHold.getSeatHoldId());
     }

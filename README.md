@@ -24,3 +24,4 @@ To create JAR
 $gradle createJar
 
 Run the application
+$ java -jar ticket-service-0.1.0.jar

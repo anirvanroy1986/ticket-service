@@ -13,7 +13,7 @@ public class Seat implements Comparable<Seat>{
 	
 	private String seatNum;
 	private long timeStamp;
-	private Hold hold;
+	
 	private int id;
 	private String row;
 	
@@ -51,21 +51,6 @@ public class Seat implements Comparable<Seat>{
 	}
 
 	/**
-	 * @return the hold
-	 */
-	public Hold getHold() {
-		return hold;
-	}
-
-	/**
-	 * @param hold the hold to set
-	 */
-	public void setHold(Hold hold) {
-		this.hold = hold;
-	}
-	
-	
-   /**
 	 * @return the id
 	 */
 	public int getId() {
